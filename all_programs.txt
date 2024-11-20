@@ -1,33 +1,31 @@
 //MAX_SUB_ARRAY_D_AND_C
 #include <stdio.h>
 #include <conio.h>
-typedef struct
-{
+
+typedef struct {
     int left;
     int right;
     int sum;
 } Result;
-Result css(int arr[], int l, int m, int h)
-{
-    int sum = 0, i;
-    // Find the maximum sum on the left side
-    int left_sum = -10000, left_i = m;
-    for (i = m; i >= l; i--)
-    {
+
+Result css(int arr[], int l, int m, int h) {
+    int sum, i, left_sum, left_i, right_sum, right_i;
+    sum = 0;
+    left_sum = -10000;
+    left_i = m;
+    for (i = m; i >= l; i--) {
         sum += arr[i];
-        if (sum > left_sum)
-        {
+        if (sum > left_sum) {
             left_sum = sum;
             left_i = i;
         }
     }
     sum = 0;
-    int right_sum = -10000, right_i = m + 1;
-    for (i = m + 1; i <= h; i++)
-    {
+    right_sum = -10000;
+    right_i = m + 1;
+    for (i = m + 1; i <= h; i++) {
         sum += arr[i];
-        if (sum > right_sum)
-        {
+        if (sum > right_sum) {
             right_sum = sum;
             right_i = i;
         }
@@ -35,17 +33,18 @@ Result css(int arr[], int l, int m, int h)
     Result res = {left_i, right_i, left_sum + right_sum};
     return res;
 }
-Result maxs(int arr[], int l, int h)
-{
-    if (l == h)
-    {
+
+Result maxs(int arr[], int l, int h) {
+    int m;
+    Result left_res, right_res, cross_res;
+    if (l == h) {
         Result res = {l, h, arr[l]};
         return res;
     }
-    int m = (l + h) / 2;
-    Result left_res = maxs(arr, l, m);
-    Result right_res = maxs(arr, m + 1, h);
-    Result cross_res = css(arr, l, m, h);
+    m = (l + h) / 2;
+    left_res = maxs(arr, l, m);
+    right_res = maxs(arr, m + 1, h);
+    cross_res = css(arr, l, m, h);
     if (left_res.sum >= right_res.sum && left_res.sum >= cross_res.sum)
         return left_res;
     else if (right_res.sum >= left_res.sum && right_res.sum >= cross_res.sum)
@@ -53,16 +52,16 @@ Result maxs(int arr[], int l, int h)
     else
         return cross_res;
 }
-int main()
-{
-    int n, k, i;
+
+int main() {
+    int n, k, i, arr[100];
+    Result res;
     printf("Enter the number of elements: ");
     scanf("%d", &n);
-    int arr[n];
     printf("Enter the elements: ");
     for (i = 0; i < n; ++i)
         scanf("%d", &arr[i]);
-    Result res = maxs(arr, 0, n - 1);
+    res = maxs(arr, 0, n - 1);
     printf("Maximum subarray:\n");
     for (k = res.left; k <= res.right; ++k)
         printf("%d ", arr[k]);
@@ -90,7 +89,7 @@ typedef struct
 float *greedy_knapsack(int n, int m, Item *arr, int *frac)
 {
     int i, j;
-    float pw[n], temp, *x;
+    float pw[100], temp, *x;
     Item itemtemp;
     x = (float *)malloc(n * sizeof(float));
     for (i = 0; i < n; i++)
@@ -141,7 +140,7 @@ int main()
     scanf("%d", &m);
     printf("Enter the number of items = ");
     scanf("%d", &n);
-    Item arr[n];
+    Item arr[100];
     float *x, max_profit = 0;
     frac = (int *)malloc(n * sizeof(int));
     for (i = 0; i < n; i++)
@@ -178,40 +177,45 @@ int main()
 
 
 
+
 //MCM
 #include <stdio.h>
+#include <conio.h>
 #include <limits.h>
-
 #define MAX 100
+
 
 void matrixChainOrder(int p[], int n, int m[MAX][MAX], int s[MAX][MAX]) {
     for (int i = 1; i <= n; i++) {
-        m[i][i] = 0;
+	m[i][i] = 0; 
     }
 
+
     for (int l = 2; l <= n; l++) {
-        for (int i = 1; i <= n - l + 1; i++) {
-            int j = i + l - 1;
-            m[i][j] = INT_MAX; 
-            for (int k = i; k < j; k++) {
-                int q = m[i][k] + m[k + 1][j] + p[i - 1] * p[k] * p[j];
-                if (q < m[i][j]) {
-                    m[i][j] = q;
-                    s[i][j] = k; // Store the split point
-                }
-            }
-        }
+	for (int i = 1; i <= n - l + 1; i++) {
+	    int j = i + l - 1;
+	    m[i][j] = INT_MAX; 
+	    for (int k = i; k < j; k++) {
+		
+		int q = m[i][k] + m[k + 1][j] + p[i - 1] * p[k] * p[j];
+		if (q < m[i][j]) {
+		    m[i][j] = q;
+		    s[i][j] = k;
+		}
+	    }
+	}
     }
 }
 
+
 void printOptimalParenthesis(int s[MAX][MAX], int i, int j) {
     if (i == j)
-        printf("A%d", i);
+	printf("A%d", i);
     else {
-        printf("(");
-        printOptimalParenthesis(s, i, s[i][j]);
-        printOptimalParenthesis(s, s[i][j] + 1, j);
-        printf(")");
+	printf("(");
+	printOptimalParenthesis(s, i, s[i][j]);
+	printOptimalParenthesis(s, s[i][j] + 1, j);
+	printf(")");
     }
 }
 
@@ -224,19 +228,22 @@ int main() {
 
     printf("Enter the dimensions of matrices (p[0] to p[n]): \n");
     for (int i = 0; i <= n; i++) {
-        scanf("%d", &p[i]);
+	scanf("%d", &p[i]);
     }
 
     matrixChainOrder(p, n, m, s);
 
     printf("Minimum number of multiplications is: %d\n", m[1][n]);
-    
+
     printf("Optimal Parenthesization is: ");
     printOptimalParenthesis(s, 1, n);
     printf("\n");
-
+    getch();
     return 0;
 }
+
+
+
 
 
 
@@ -247,7 +254,7 @@ int main() {
 #include <limits.h>
 int rod_cutting(int price[], int n)
 {
-    int dp[n + 1];
+    int dp[100 + 1];
     dp[0] = 0;
     for (int i = 1; i <= n; i++)
     {
@@ -265,7 +272,7 @@ int main()
     int n;
     printf("Enter the length of the rod: ");
     scanf("%d", &n);
-    int price[n];
+    int price[100];
     printf("Enter the prices for each length:\n");
     for (int i = 0; i < n; i++)
     {
@@ -283,6 +290,7 @@ int main()
 
 
 
+
 //MAX_SUB_ARRAY_DYNAMIC
 #include <stdio.h>
 #include <conio.h>
@@ -291,7 +299,7 @@ int main()
     int n, i;
     printf("Enter the number of elements: ");
     scanf("%d", &n);
-    int arr[n];
+    int arr[100];
     printf("Enter the elements: ");
     for (i = 0; i < n; ++i)
         scanf("%d", &arr[i]);
@@ -322,52 +330,46 @@ int main()
 
 //N-QUEENS
 #include <stdio.h>
-#include <stdbool.h>
 #include <conio.h>
+
 #define N 10
+
 int board[N][N], num_solution = 0;
-bool is_safe(int board[N][N], int row, int col, int n)
-{
+
+int is_safe(int board[N][N], int row, int col, int n) {
     int i, j;
-    for (i = 0; i < row; i++)
-    {
+    for (i = 0; i < row; i++) {
         if (board[i][col])
-            return false;
+            return 0;
     }
-    for (i = row, j = col; i >= 0 && j >= 0; i--, j--)
-    {
+    for (i = row, j = col; i >= 0 && j >= 0; i--, j--) {
         if (board[i][j])
-            return false;
+            return 0;
     }
-    for (i = row, j = col; i >= 0 && j < n; i--, j++)
-    {
+    for (i = row, j = col; i >= 0 && j < n; i--, j++) {
         if (board[i][j])
-            return false;
+            return 0;
     }
-    return true;
+    return 1;
 }
-bool n_queens(int board[N][N], int row, int n)
-{
+
+int n_queens(int board[N][N], int row, int n) {
     int i, col, j;
-    if (row == n)
-    {
-        for (i = 0; i < n; i++)
-        {
-            for (j = 0; j < n; j++)
-            {
+    if (row == n) {
+        for (i = 0; i < n; i++) {
+            for (j = 0; j < n; j++) {
                 printf("%c ", board[i][j] ? 'Q' : '.');
             }
             printf("\n");
         }
         printf("\n");
         num_solution += 1;
-        return true;
+        return 1;
     }
-    bool has_solution = false;
-    for (col = 0; col < n; col++)
-    {
-        if (is_safe(board, row, col, n))
-        {
+
+    int has_solution = 0;
+    for (col = 0; col < n; col++) {
+        if (is_safe(board, row, col, n)) {
             board[row][col] = 1;
             has_solution = n_queens(board, row + 1, n) || has_solution;
             board[row][col] = 0;
@@ -375,26 +377,24 @@ bool n_queens(int board[N][N], int row, int n)
     }
     return has_solution;
 }
-int main()
-{
-    int n;
-    printf("Enter the number of queens(less than 10): ");
+
+int main() {
+    int n, i, j;
+    printf("Enter the number of queens (less than 10): ");
     scanf("%d", &n);
-    for (int i = 0; i < n; i++)
-    {
-        for (int j = 0; j < n; j++)
-        {
+
+    for (i = 0; i < n; i++) {
+        for (j = 0; j < n; j++) {
             board[i][j] = 0;
         }
     }
-    if (!n_queens(board, 0, n))
-    {
+
+    if (!n_queens(board, 0, n)) {
         printf("No solution exists\n");
-    }
-    else
-    {
+    } else {
         printf("Number of Solutions = %d", num_solution);
     }
+
     getch();
     return 0;
 }
